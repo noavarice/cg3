@@ -20,3 +20,6 @@ HEADERS  += mainwindow.h \
     openglwidget.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    shaders.qrc
