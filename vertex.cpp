@@ -12,21 +12,6 @@ Vertex::Vertex(const QVector3D &position)
 {
 }
 
-Q_DECL_CONSTEXPR size_t Vertex::positionOffset()
-{
-    return offsetof(Vertex, position);
-}
-
-Q_DECL_CONSTEXPR size_t Vertex::colorOffset()
-{
-    return offsetof(Vertex, color);
-}
-
-Q_DECL_CONSTEXPR size_t Vertex::stride()
-{
-    return sizeof(Vertex);
-}
-
 void Vertex::setColor(const QVector3D& newColor)
 {
     color = newColor;
