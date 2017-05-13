@@ -5,7 +5,10 @@
 
 class QVector3D;
 
-QVector3D* generateConeCoords(
+static constexpr short CIRCLE_POINTS_COUNT = 360;
+
+void generateConeCoords(
+        OUT QVector3D coords[CIRCLE_POINTS_COUNT * 2],
         float height,
         float radius
         );
