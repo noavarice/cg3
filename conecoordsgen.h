@@ -3,8 +3,11 @@
 
 #define OUT
 
-void generateConeCoords(
-        OUT float* coords,
+#include <memory>
+
+class QVector3D;
+
+std::unique_ptr<QVector3D[]> generateConeCoords(
         float height,
         float radius
         );
