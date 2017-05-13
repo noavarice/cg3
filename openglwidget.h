@@ -12,16 +12,19 @@ class OpenGLWidget : public QOpenGLWidget, QOpenGLFunctions
 {
 public:
     OpenGLWidget(QWidget* parent = nullptr);
+    void drawCone(float height, float radius);
 
 protected:
     void initializeGL() override;
-    void resizeGL(int width, int height) override;
     void paintGL() override;
 
 private:
     QOpenGLShaderProgram* shaderProgram;
     QOpenGLBuffer vertexBuffer;
     QOpenGLVertexArrayObject vertexArrayObject;
+
+    float height;
+    float radius;
 };
 
 #endif // OPENGLWIDGET_H

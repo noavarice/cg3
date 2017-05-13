@@ -1,9 +1,14 @@
 #include "openglwidget.h"
 
+#include "conecoordsgen.h"
+#include "vertex.h"
+
 #include <QOpenGLShaderProgram>
 
 OpenGLWidget::OpenGLWidget(QWidget* parent)
     : QOpenGLWidget(parent)
+    , height{1.0f}
+    , radius{1.0f}
 {
 }
 
@@ -30,10 +35,11 @@ void OpenGLWidget::initializeGL()
     shaderProgram->release();
 }
 
-void OpenGLWidget::resizeGL(int width, int height)
+void OpenGLWidget::drawCone(float height, float radius)
 {
-    Q_UNUSED(width);
-    Q_UNUSED(height);
+    this->height = height;
+    this->radius = radius;
+    update();
 }
 
 void OpenGLWidget::paintGL()
