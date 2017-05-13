@@ -14,10 +14,13 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    openglwidget.cpp
+    openglwidget.cpp \
+    conecoordsgen.cpp
 
 HEADERS  += mainwindow.h \
-    openglwidget.h
+    openglwidget.h \
+    drawcone.h \
+    conecoordsgen.h
 
 FORMS    += mainwindow.ui
 
