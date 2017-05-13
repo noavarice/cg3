@@ -9,12 +9,12 @@ static const QVector3D START_POINT{0.0f, 0.0f, 0.0f};
 static const short CIRCLE_POINTS_COUNT = 360;
 static const float RADIAN_PART = 2 * M_PI / CIRCLE_POINTS_COUNT;
 
-std::unique_ptr<QVector3D[]> generateConeCoords(
+QVector3D* generateConeCoords(
         float height,
         float radius
         )
 {
-    std::unique_ptr<QVector3D[]> resultArray{new QVector3D[CIRCLE_POINTS_COUNT * 2]};
+    QVector3D* resultArray = new QVector3D[CIRCLE_POINTS_COUNT * 2];
     float currentAngle = 0.0f;
     QVector3D currentPoint;
     QVector3D coneTop{0.0f, 0.0f, height};
