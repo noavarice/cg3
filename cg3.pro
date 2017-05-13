@@ -17,12 +17,14 @@ CONFIG += c++11
 SOURCES += main.cpp\
         mainwindow.cpp \
     openglwidget.cpp \
-    conecoordsgen.cpp
+    conecoordsgen.cpp \
+    vertex.cpp
 
 HEADERS  += mainwindow.h \
     openglwidget.h \
     drawcone.h \
-    conecoordsgen.h
+    conecoordsgen.h \
+    vertex.h
 
 FORMS    += mainwindow.ui
 
