@@ -12,6 +12,8 @@ class OpenGLWidget : public QOpenGLWidget, QOpenGLFunctions
 {
 public:
     OpenGLWidget(QWidget* parent = nullptr);
+
+public slots:
     void drawCone(float height, float radius);
 
 protected:
