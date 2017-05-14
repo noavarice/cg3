@@ -5,6 +5,12 @@
 
 #include <QOpenGLShaderProgram>
 
+static const Vertex VERTICES[] = {
+    Vertex({-0.5f, -0.5f, 0.0f}, {0.5f, 0.0f, 0.0f}),
+    Vertex({0.0f, 0.5f, 0.0f}, {0.0f, 0.5f, 0.0f}),
+    Vertex({0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 0.5f}),
+};
+
 OpenGLWidget::OpenGLWidget(QWidget* parent)
     : QOpenGLWidget(parent)
     , height{1.0f}
@@ -22,17 +28,23 @@ void OpenGLWidget::initializeGL()
     shaderProgram->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/shader.vert");
     shaderProgram->link();
     shaderProgram->bind();
-    shaderProgram->enableAttributeArray(0);
-    shaderProgram->enableAttributeArray(1);
-    shaderProgram->setAttributeBuffer(0, GL_FLOAT, Vertex::positionOffset(), 3, Vertex::stride());
-    shaderProgram->setAttributeBuffer(0, GL_FLOAT, Vertex::colorOffset(), 3, Vertex::stride());
-    shaderProgram->release();
 
     vertexBuffer.create();
     vertexBuffer.bind();
-    vertexBuffer.release();
+    vertexBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    vertexBuffer.allocate(VERTICES, sizeof(VERTICES));
 
     vertexArrayObject.create();
+    vertexArrayObject.bind();
+    shaderProgram->enableAttributeArray(0);
+    shaderProgram->enableAttributeArray(1);
+    shaderProgram->setAttributeBuffer(0, GL_FLOAT, Vertex::positionOffset(), 3, Vertex::stride());
+    shaderProgram->setAttributeBuffer(1, GL_FLOAT, Vertex::colorOffset(), 3, Vertex::stride());
+
+
+    vertexArrayObject.release();
+    vertexBuffer.release();
+    shaderProgram->release();
 }
 
 void OpenGLWidget::drawCone(float height, float radius)
@@ -44,14 +56,12 @@ void OpenGLWidget::drawCone(float height, float radius)
 
 void OpenGLWidget::paintGL()
 {
-    QVector3D vertices[720];
-    generateConeCoords(vertices, height, radius);
     glClear(GL_COLOR_BUFFER_BIT);
-    vertexBuffer.bind();
+    shaderProgram->bind();
     {
         vertexArrayObject.bind();
         glDrawArrays(GL_TRIANGLES, 0, 720);
         vertexArrayObject.release();
     }
-    vertexBuffer.release();
+    shaderProgram->release();
 }

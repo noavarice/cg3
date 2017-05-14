@@ -14,7 +14,6 @@ int main(int argc, char *argv[])
     QSurfaceFormat::setDefaultFormat(format);
 
     OpenGLWidget w;
-    w.drawCone(1.0f, 1.0f);
     w.show();
 
     return a.exec();
