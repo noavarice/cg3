@@ -16,7 +16,9 @@ OpenGLWidget::OpenGLWidget(QWidget* parent)
 
 OpenGLWidget::~OpenGLWidget()
 {
+    vertexArrayObject.release();
     vertexArrayObject.destroy();
+    vertexBuffer.release();
     vertexBuffer.destroy();
     delete shaderProgram;
 }
@@ -43,10 +45,6 @@ void OpenGLWidget::initializeGL()
     shaderProgram->enableAttributeArray(1);
     shaderProgram->setAttributeBuffer(0, GL_FLOAT, Vertex::positionOffset(), 3, Vertex::stride());
     shaderProgram->setAttributeBuffer(1, GL_FLOAT, Vertex::colorOffset(), 3, Vertex::stride());
-
-    vertexArrayObject.release();
-    vertexBuffer.release();
-    shaderProgram->release();
 }
 
 void OpenGLWidget::drawCone(float height, float radius)
@@ -60,15 +58,6 @@ void OpenGLWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT);
     generateConeCoords(vertices, height, radius);
-    shaderProgram->bind();
-    {
-        vertexBuffer.bind();
-        vertexBuffer.write(0, vertices, sizeof(vertices));
-        vertexBuffer.release();
-
-        vertexArrayObject.bind();
-        glDrawArrays(GL_TRIANGLES, 0, sizeof(vertices) / sizeof(Vertex));
-        vertexArrayObject.release();
-    }
-    shaderProgram->release();
+    vertexBuffer.write(0, vertices, sizeof(vertices));
+    glDrawArrays(GL_TRIANGLES, 0, sizeof(vertices) / sizeof(Vertex));
 }
