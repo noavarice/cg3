@@ -6,6 +6,7 @@
 #include <QOpenGLShaderProgram>
 
 static Vertex vertices[2160];
+static QMatrix4x4 mvp{};
 
 OpenGLWidget::OpenGLWidget(QWidget* parent)
     : QOpenGLWidget(parent)
@@ -34,6 +35,12 @@ void OpenGLWidget::initializeGL()
     shaderProgram->link();
     shaderProgram->bind();
 
+    QMatrix4x4 model, view, projection;
+    model.setToIdentity();
+    view.lookAt({0.0f, 5.0f, 3.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, -1.0f, 0.0f});
+    projection.perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+    mvp = projection * view * model;
+
     vertexBuffer.create();
     vertexBuffer.bind();
     vertexBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
@@ -59,5 +66,6 @@ void OpenGLWidget::paintGL()
     glClear(GL_COLOR_BUFFER_BIT);
     generateConeCoords(vertices, height, radius);
     vertexBuffer.write(0, vertices, sizeof(vertices));
+    shaderProgram->setUniformValue("mvp", mvp);
     glDrawArrays(GL_TRIANGLES, 0, sizeof(vertices) / sizeof(Vertex));
 }
