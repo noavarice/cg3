@@ -5,11 +5,7 @@
 
 #include <QOpenGLShaderProgram>
 
-static const Vertex VERTICES[] = {
-    Vertex({-0.5f, -0.5f, 0.0f}, {0.5f, 0.0f, 0.0f}),
-    Vertex({0.0f, 0.5f, 0.0f}, {0.0f, 0.5f, 0.0f}),
-    Vertex({0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 0.5f}),
-};
+static Vertex vertices[2160];
 
 OpenGLWidget::OpenGLWidget(QWidget* parent)
     : QOpenGLWidget(parent)
@@ -39,7 +35,7 @@ void OpenGLWidget::initializeGL()
     vertexBuffer.create();
     vertexBuffer.bind();
     vertexBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
-    vertexBuffer.allocate(VERTICES, sizeof(VERTICES));
+    vertexBuffer.allocate(sizeof(vertices));
 
     vertexArrayObject.create();
     vertexArrayObject.bind();
@@ -63,10 +59,15 @@ void OpenGLWidget::drawCone(float height, float radius)
 void OpenGLWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT);
+    generateConeCoords(vertices, height, radius);
     shaderProgram->bind();
     {
+        vertexBuffer.bind();
+        vertexBuffer.write(0, vertices, sizeof(vertices));
+        vertexBuffer.release();
+
         vertexArrayObject.bind();
-        glDrawArrays(GL_TRIANGLES, 0, 720);
+        glDrawArrays(GL_TRIANGLES, 0, sizeof(vertices) / sizeof(Vertex));
         vertexArrayObject.release();
     }
     shaderProgram->release();
