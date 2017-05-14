@@ -3,12 +3,10 @@
 
 #define OUT
 
-class QVector3D;
-
-static constexpr short CIRCLE_POINTS_COUNT = 360;
+class Vertex;
 
 void generateConeCoords(
-        OUT QVector3D coords[CIRCLE_POINTS_COUNT * 2],
+        OUT Vertex* coords,
         float height,
         float radius
         );

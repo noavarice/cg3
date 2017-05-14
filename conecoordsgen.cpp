@@ -1,15 +1,16 @@
 #include "conecoordsgen.h"
 
-#include <QVector3D>
+#include "vertex.h"
 
 #define _USE_MATH_DEFINES
 #include <cmath>
 
 static constexpr QVector3D START_POINT{0.0f, 0.0f, 0.0f};
+static constexpr short CIRCLE_POINTS_COUNT = 360;
 static constexpr float RADIAN_PART = 2 * M_PI / CIRCLE_POINTS_COUNT;
 
 void generateConeCoords(
-        OUT QVector3D resultArray[CIRCLE_POINTS_COUNT * 2],
+        OUT Vertex* resultArray,
         float height,
         float radius
         )
@@ -18,15 +19,15 @@ void generateConeCoords(
     QVector3D currentPoint;
     QVector3D coneTop{0.0f, 0.0f, height};
     for (short i = 0; i < CIRCLE_POINTS_COUNT; ++i) {
-        resultArray[i] = START_POINT;
-        resultArray[i + CIRCLE_POINTS_COUNT] = coneTop;
+        resultArray[i] = Vertex(START_POINT);
+        resultArray[i + CIRCLE_POINTS_COUNT] = Vertex(coneTop);
 
         currentPoint = QVector3D(cos(currentAngle) * radius, sin(currentAngle) * radius, 0.0f);
-        resultArray[i + 1] = resultArray[i + CIRCLE_POINTS_COUNT + 1] = currentPoint;
+        resultArray[i + 1] = resultArray[i + CIRCLE_POINTS_COUNT + 1] = Vertex(currentPoint);
 
         currentAngle += RADIAN_PART;
 
         currentPoint = QVector3D(cos(currentAngle) * radius, sin(currentAngle) * radius, 0.0f);
-        resultArray[i + 2] = resultArray[i + CIRCLE_POINTS_COUNT + 2] = currentPoint;
+        resultArray[i + 2] = resultArray[i + CIRCLE_POINTS_COUNT + 2] = Vertex(currentPoint);
     }
 }
