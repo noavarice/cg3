@@ -18,6 +18,13 @@ OpenGLWidget::OpenGLWidget(QWidget* parent)
 {
 }
 
+OpenGLWidget::~OpenGLWidget()
+{
+    vertexArrayObject.release();
+    vertexBuffer.release();
+    delete shaderProgram;
+}
+
 void OpenGLWidget::initializeGL()
 {
     initializeOpenGLFunctions();
@@ -40,7 +47,6 @@ void OpenGLWidget::initializeGL()
     shaderProgram->enableAttributeArray(1);
     shaderProgram->setAttributeBuffer(0, GL_FLOAT, Vertex::positionOffset(), 3, Vertex::stride());
     shaderProgram->setAttributeBuffer(1, GL_FLOAT, Vertex::colorOffset(), 3, Vertex::stride());
-
 
     vertexArrayObject.release();
     vertexBuffer.release();
