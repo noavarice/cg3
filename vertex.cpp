@@ -8,6 +8,12 @@ Vertex::Vertex(const QVector3D& position, const QVector3D& color)
 
 Vertex::Vertex(const QVector3D &position)
     : position{position}
+    , color{0.0f, 0.0f, 0.0f}
+{
+}
+
+Vertex::Vertex()
+    : position{}
     , color{}
 {
 }

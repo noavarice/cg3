@@ -6,8 +6,9 @@
 class Vertex
 {
 public:
-    Vertex(const QVector3D& position, const QVector3D& color);
+    Vertex();
     explicit Vertex(const QVector3D &position);
+    Vertex(const QVector3D& position, const QVector3D& color);
 
     Q_DECL_CONSTEXPR static size_t positionOffset()
     {
