@@ -16,8 +16,8 @@ OpenGLWidget::OpenGLWidget(QWidget* parent)
 
 OpenGLWidget::~OpenGLWidget()
 {
-    vertexArrayObject.release();
-    vertexBuffer.release();
+    vertexArrayObject.destroy();
+    vertexBuffer.destroy();
     delete shaderProgram;
 }
 
