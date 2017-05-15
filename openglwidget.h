@@ -1,6 +1,9 @@
 #ifndef OPENGLWIDGET_H
 #define OPENGLWIDGET_H
 
+#include "vertex.h"
+
+#include <QMatrix4x4>
 #include <QOpenGLBuffer>
 #include <QOpenGLFunctions>
 #include <QOpenGLVertexArrayObject>
@@ -30,6 +33,14 @@ private:
 
     float height;
     float radius;
+    Vertex vertices[2160];
+
+    using LightPropeties = QPair<QVector3D, QVector3D>;
+    QList<LightPropeties> lightPositions;
+
+    QMatrix4x4 model;
+    QMatrix4x4 view;
+    QMatrix4x4 projection;
 };
 
 #endif // OPENGLWIDGET_H

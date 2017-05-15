@@ -1,18 +1,28 @@
 #include "openglwidget.h"
 
 #include "conecoordsgen.h"
-#include "vertex.h"
 
 #include <QOpenGLShaderProgram>
 
-static Vertex vertices[2160];
-static QMatrix4x4 model{}, view{}, projection{};
+enum AttributeBuffer
+{
+    VERTEX_POSITION,
+    NORMAL_VECTOR
+};
+
+static const uint8_t MAX_LIGHT_SOURCES_COUNT = 5;
 
 OpenGLWidget::OpenGLWidget(QWidget* parent)
     : QOpenGLWidget(parent)
     , height{1.0f}
     , radius{1.0f}
+    , model{}
+    , view{}
+    , projection{}
 {
+    model.setToIdentity();
+    view.lookAt({4.0f, 5.0f, 3.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, -1.0f, 0.0f});
+    projection.perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
 }
 
 OpenGLWidget::~OpenGLWidget()
@@ -37,10 +47,6 @@ void OpenGLWidget::initializeGL()
     shaderProgram->link();
     shaderProgram->bind();
 
-    model.setToIdentity();
-    view.lookAt({4.0f, 5.0f, 3.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, -1.0f, 0.0f});
-    projection.perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
-
     vertexBuffer.create();
     vertexBuffer.bind();
     vertexBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
@@ -48,18 +54,33 @@ void OpenGLWidget::initializeGL()
 
     vertexArrayObject.create();
     vertexArrayObject.bind();
-    shaderProgram->enableAttributeArray(0);
-    shaderProgram->enableAttributeArray(1);
-    shaderProgram->setAttributeBuffer(0, GL_FLOAT, Vertex::positionOffset(), 3, Vertex::stride());
-    shaderProgram->setAttributeBuffer(1, GL_FLOAT, Vertex::normalOffset(), 3, Vertex::stride());
+    shaderProgram->enableAttributeArray(VERTEX_POSITION);
+    shaderProgram->enableAttributeArray(NORMAL_VECTOR);
+    shaderProgram->setAttributeBuffer(VERTEX_POSITION,
+                                      GL_FLOAT,
+                                      Vertex::positionOffset(),
+                                      3,
+                                      Vertex::stride());
+    shaderProgram->setAttributeBuffer(NORMAL_VECTOR,
+                                      GL_FLOAT,
+                                      Vertex::normalOffset(),
+                                      3,
+                                      Vertex::stride());
 
     GLuint shaderProgramId = shaderProgram->programId();
-    int lightPosLoc = glGetUniformLocation(shaderProgramId, "lightPosition");
-    glUniform3f(lightPosLoc, -1.0f, 5.0f, 3.0f);
+
     GLint objectColorLoc = glGetUniformLocation(shaderProgramId, "objectColor");
-    GLint lightColorLoc  = glGetUniformLocation(shaderProgramId, "lightColor");
     glUniform3f(objectColorLoc, 0.0f, 0.5f, 0.31f);
-    glUniform3f(lightColorLoc,  0.3f, 0.3f, 0.3f);
+
+    int lightPosLoc = glGetUniformLocation(shaderProgramId, "lightPosition");
+    glUniform3f(lightPosLoc, -1.0f, -5.0f, 3.0f);
+    GLint lightColorLoc  = glGetUniformLocation(shaderProgramId, "lightColor");
+    glUniform3f(lightColorLoc,  1.0f, 0.9f, 1.0f);
+
+    int lightPosLoc1 = glGetUniformLocation(shaderProgramId, "lightPosition1");
+    glUniform3f(lightPosLoc1, 10.0f, 15.0f, 3.0f);
+    GLint lightColorLoc1  = glGetUniformLocation(shaderProgramId, "lightColor1");
+    glUniform3f(lightColorLoc1,  0.9f, 0.0f, 0.3f);
 }
 
 void OpenGLWidget::resizeGL(int w, int h)
