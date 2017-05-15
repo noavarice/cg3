@@ -22,7 +22,6 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     openglwidget.h \
-    drawcone.h \
     conecoordsgen.h \
     vertex.h
 
