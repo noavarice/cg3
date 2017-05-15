@@ -6,7 +6,7 @@
 #include <QOpenGLShaderProgram>
 
 static Vertex vertices[2160];
-static QMatrix4x4 mvp{};
+static QMatrix4x4 model{}, view{}, projection{};
 
 OpenGLWidget::OpenGLWidget(QWidget* parent)
     : QOpenGLWidget(parent)
@@ -28,6 +28,7 @@ void OpenGLWidget::initializeGL()
 {
     initializeOpenGLFunctions();
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glEnable(GL_LIGHTING);
 
     shaderProgram = new QOpenGLShaderProgram();
     shaderProgram->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/shader.frag");
@@ -35,11 +36,9 @@ void OpenGLWidget::initializeGL()
     shaderProgram->link();
     shaderProgram->bind();
 
-    QMatrix4x4 model, view, projection;
     model.setToIdentity();
-    view.lookAt({0.0f, 5.0f, 3.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, -1.0f, 0.0f});
+    view.lookAt({4.0f, 5.0f, 3.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, -1.0f, 0.0f});
     projection.perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
-    mvp = projection * view * model;
 
     vertexBuffer.create();
     vertexBuffer.bind();
@@ -51,7 +50,15 @@ void OpenGLWidget::initializeGL()
     shaderProgram->enableAttributeArray(0);
     shaderProgram->enableAttributeArray(1);
     shaderProgram->setAttributeBuffer(0, GL_FLOAT, Vertex::positionOffset(), 3, Vertex::stride());
-    shaderProgram->setAttributeBuffer(1, GL_FLOAT, Vertex::colorOffset(), 3, Vertex::stride());
+    shaderProgram->setAttributeBuffer(1, GL_FLOAT, Vertex::normalOffset(), 3, Vertex::stride());
+
+    GLuint shaderProgramId = shaderProgram->programId();
+    int lightPosLoc = glGetUniformLocation(shaderProgramId, "lightPosition");
+    glUniform3f(lightPosLoc, -1.0f, 5.0f, 3.0f);
+    GLint objectColorLoc = glGetUniformLocation(shaderProgramId, "objectColor");
+    GLint lightColorLoc  = glGetUniformLocation(shaderProgramId, "lightColor");
+    glUniform3f(objectColorLoc, 0.0f, 0.5f, 0.31f);
+    glUniform3f(lightColorLoc,  1.0f, 1.0f, 1.0f);
 }
 
 void OpenGLWidget::drawCone(float height, float radius)
@@ -66,6 +73,8 @@ void OpenGLWidget::paintGL()
     glClear(GL_COLOR_BUFFER_BIT);
     generateConeCoords(vertices, height, radius);
     vertexBuffer.write(0, vertices, sizeof(vertices));
-    shaderProgram->setUniformValue("mvp", mvp);
+    shaderProgram->setUniformValue("model", model);
+    shaderProgram->setUniformValue("view", view);
+    shaderProgram->setUniformValue("projection", projection);
     glDrawArrays(GL_TRIANGLES, 0, sizeof(vertices) / sizeof(Vertex));
 }
