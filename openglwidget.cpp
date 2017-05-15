@@ -2,27 +2,34 @@
 
 #include "conecoordsgen.h"
 
+#include <QMouseEvent>
 #include <QOpenGLShaderProgram>
+
+#include <QtMath>
 
 enum AttributeBuffer
 {
     VERTEX_POSITION,
     NORMAL_VECTOR
-};
 
-static const uint8_t MAX_LIGHT_SOURCES_COUNT = 5;
+};
 
 OpenGLWidget::OpenGLWidget(QWidget* parent)
     : QOpenGLWidget(parent)
-    , height{1.0f}
+    , height{2.0f}
     , radius{1.0f}
+    , source1{{-5.0f, -2.0f, 5.0f}, {0.3f, 0.9f, 0.9f}}
+    , source2{{5.0f, 2.0f, -5.0f}, {1.0f, 1.0f, 1.0f}}
     , model{}
     , view{}
     , projection{}
+    , lastMousePosition{-1, -1}
+    , isDefaultMousePosition{true}
 {
     model.setToIdentity();
-    view.lookAt({4.0f, 5.0f, 3.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, -1.0f, 0.0f});
-    projection.perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+    view.lookAt({0.0f, 5.0f, 4.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, -1.0f, 0.0f});
+    projection.perspective(45.0f, 4.0f / 3.0f, 0.1f, 10.0f);
+    setMouseTracking(true);
 }
 
 OpenGLWidget::~OpenGLWidget()
@@ -32,6 +39,31 @@ OpenGLWidget::~OpenGLWidget()
     vertexBuffer.release();
     vertexBuffer.destroy();
     delete shaderProgram;
+}
+
+void OpenGLWidget::setFirstLightSourcePosition(const QVector3D& position)
+{
+    source1.first = position;
+}
+
+void OpenGLWidget::setFirstLightSourceColor(const QVector3D& color)
+{
+    source1.second = color;
+}
+
+void OpenGLWidget::setSecondLightSourcePosition(const QVector3D& position)
+{
+    source2.first = position;
+}
+
+void OpenGLWidget::setSecondLightSourceColor(const QVector3D& color)
+{
+    source2.second = color;
+}
+
+void OpenGLWidget::setCameraPosition(const QVector3D &newPosition)
+{
+    view.lookAt(newPosition, {0.0f, 0.0f, 0.0f}, {0.0f, -1.0f, 0.0f});
 }
 
 void OpenGLWidget::initializeGL()
@@ -70,30 +102,27 @@ void OpenGLWidget::initializeGL()
     GLuint shaderProgramId = shaderProgram->programId();
 
     GLint objectColorLoc = glGetUniformLocation(shaderProgramId, "objectColor");
-    glUniform3f(objectColorLoc, 0.0f, 0.5f, 0.31f);
+    glUniform3f(objectColorLoc, 1.0f, 0.5f, 0.31f);
 
     int lightPosLoc = glGetUniformLocation(shaderProgramId, "lightPosition");
-    glUniform3f(lightPosLoc, -1.0f, -5.0f, 3.0f);
+    auto tempVec = source1.first;
+    glUniform3f(lightPosLoc, tempVec.x(), tempVec.y(), tempVec.z());
     GLint lightColorLoc  = glGetUniformLocation(shaderProgramId, "lightColor");
-    glUniform3f(lightColorLoc,  1.0f, 0.9f, 1.0f);
+    tempVec = source1.second;
+    glUniform3f(lightColorLoc,  tempVec.x(), tempVec.y(), tempVec.z());
 
     int lightPosLoc1 = glGetUniformLocation(shaderProgramId, "lightPosition1");
-    glUniform3f(lightPosLoc1, 10.0f, 15.0f, 3.0f);
+    tempVec = source2.first;
+    glUniform3f(lightPosLoc1,  tempVec.x(), tempVec.y(), tempVec.z());
     GLint lightColorLoc1  = glGetUniformLocation(shaderProgramId, "lightColor1");
-    glUniform3f(lightColorLoc1,  0.9f, 0.0f, 0.3f);
+    tempVec = source2.second;
+    glUniform3f(lightColorLoc1,  tempVec.x(), tempVec.y(), tempVec.z());
 }
 
 void OpenGLWidget::resizeGL(int w, int h)
 {
     Q_UNUSED(w);
     Q_UNUSED(h);
-}
-
-void OpenGLWidget::drawCone(float height, float radius)
-{
-    this->height = height;
-    this->radius = radius;
-    update();
 }
 
 void OpenGLWidget::paintGL()

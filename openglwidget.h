@@ -18,8 +18,11 @@ public:
     OpenGLWidget(QWidget* parent = nullptr);
     ~OpenGLWidget();
 
-public slots:
-    void drawCone(float height, float radius);
+    void setFirstLightSourcePosition(const QVector3D& position);
+    void setFirstLightSourceColor(const QVector3D& color);
+    void setSecondLightSourcePosition(const QVector3D& position);
+    void setSecondLightSourceColor(const QVector3D& color);
+    void setCameraPosition(const QVector3D& newPosition);
 
 protected:
     void initializeGL() override;
@@ -35,12 +38,15 @@ private:
     float radius;
     Vertex vertices[2160];
 
-    using LightPropeties = QPair<QVector3D, QVector3D>;
-    QList<LightPropeties> lightPositions;
+    QPair<QVector3D, QVector3D> source1;
+    QPair<QVector3D, QVector3D> source2;
 
     QMatrix4x4 model;
     QMatrix4x4 view;
     QMatrix4x4 projection;
+
+    QPoint lastMousePosition;
+    bool isDefaultMousePosition;
 };
 
 #endif // OPENGLWIDGET_H
