@@ -29,6 +29,7 @@ void OpenGLWidget::initializeGL()
     initializeOpenGLFunctions();
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glEnable(GL_LIGHTING);
+    glEnable(GL_CULL_FACE);
 
     shaderProgram = new QOpenGLShaderProgram();
     shaderProgram->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/shader.frag");
@@ -58,7 +59,7 @@ void OpenGLWidget::initializeGL()
     GLint objectColorLoc = glGetUniformLocation(shaderProgramId, "objectColor");
     GLint lightColorLoc  = glGetUniformLocation(shaderProgramId, "lightColor");
     glUniform3f(objectColorLoc, 0.0f, 0.5f, 0.31f);
-    glUniform3f(lightColorLoc,  1.0f, 1.0f, 1.0f);
+    glUniform3f(lightColorLoc,  0.3f, 0.3f, 0.3f);
 }
 
 void OpenGLWidget::drawCone(float height, float radius)
