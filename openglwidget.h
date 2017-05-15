@@ -10,6 +10,7 @@ class QOpenGLShaderProgram;
 
 class OpenGLWidget : public QOpenGLWidget, QOpenGLFunctions
 {
+    Q_OBJECT
 public:
     OpenGLWidget(QWidget* parent = nullptr);
     ~OpenGLWidget();
@@ -20,6 +21,7 @@ public slots:
 protected:
     void initializeGL() override;
     void paintGL() override;
+    void resizeGL(int w, int h) override;
 
 private:
     QOpenGLShaderProgram* shaderProgram;

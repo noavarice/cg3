@@ -62,6 +62,12 @@ void OpenGLWidget::initializeGL()
     glUniform3f(lightColorLoc,  0.3f, 0.3f, 0.3f);
 }
 
+void OpenGLWidget::resizeGL(int w, int h)
+{
+    Q_UNUSED(w);
+    Q_UNUSED(h);
+}
+
 void OpenGLWidget::drawCone(float height, float radius)
 {
     this->height = height;
