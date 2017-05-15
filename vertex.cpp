@@ -1,29 +1,26 @@
 #include "vertex.h"
 
-Vertex::Vertex(const QVector3D& position, const QVector3D& color)
+Vertex::Vertex(const QVector3D& position, const QVector3D& normal)
     : position{position}
-    , color{color}
+    , normal{normal}
 {
 }
 
 Vertex::Vertex(const QVector3D &position)
     : position{position}
-    , color{1.0f, 1.0f, 1.0f}
 {
 }
 
 Vertex::Vertex()
-    : position{}
-    , color{1.0f, 1.0f, 1.0f}
 {
-}
-
-void Vertex::setColor(const QVector3D& newColor)
-{
-    color = newColor;
 }
 
 void Vertex::setPosition(const QVector3D& newPosition)
 {
     position = newPosition;
+}
+
+void Vertex::setNormal(const QVector3D &newNormal)
+{
+    normal = newNormal;
 }

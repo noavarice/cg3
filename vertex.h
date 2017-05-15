@@ -8,16 +8,16 @@ class Vertex
 public:
     Vertex();
     explicit Vertex(const QVector3D &position);
-    Vertex(const QVector3D& position, const QVector3D& color);
+    Vertex(const QVector3D& position, const QVector3D& normal);
 
     Q_DECL_CONSTEXPR static size_t positionOffset()
     {
         return offsetof(Vertex, position);
     }
 
-    Q_DECL_CONSTEXPR static size_t colorOffset()
+    Q_DECL_CONSTEXPR static size_t normalOffset()
     {
-        return offsetof(Vertex, color);
+        return offsetof(Vertex, normal);
     }
 
     Q_DECL_CONSTEXPR static size_t stride()
@@ -25,12 +25,12 @@ public:
         return sizeof(Vertex);
     }
 
-    void setColor(const QVector3D& newColor);
+    void setNormal(const QVector3D& newNormal);
     void setPosition(const QVector3D& newPosition);
 
 private:
     QVector3D position;
-    QVector3D color;
+    QVector3D normal;
 };
 
 #endif // VERTEX_H
