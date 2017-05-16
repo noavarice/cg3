@@ -7,6 +7,8 @@ namespace Ui {
 class MainWindow;
 }
 
+class OpenGLWidget;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -15,8 +17,12 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+private slots:
+    void on_spinBox_valueChanged(int value);
+
 private:
     Ui::MainWindow *ui;
+    OpenGLWidget* w;
 };
 
 #endif // MAINWINDOW_H

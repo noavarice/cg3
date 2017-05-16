@@ -1,7 +1,7 @@
 #include "mainwindow.h"
+
 #include <QApplication>
 #include <QSurfaceFormat>
-#include "openglwidget.h"
 
 int main(int argc, char *argv[])
 {
@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     format.setProfile(QSurfaceFormat::CoreProfile);
     QSurfaceFormat::setDefaultFormat(format);
 
-    OpenGLWidget w;
+    MainWindow w;
     w.show();
 
     return a.exec();
