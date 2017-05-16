@@ -29,7 +29,6 @@ OpenGLWidget::OpenGLWidget(QWidget* parent)
     model.setToIdentity();
     view.lookAt({0.0f, 5.0f, 4.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, -1.0f, 0.0f});
     projection.perspective(45.0f, 4.0f / 3.0f, 0.1f, 10.0f);
-    setMouseTracking(true);
 }
 
 OpenGLWidget::~OpenGLWidget()
