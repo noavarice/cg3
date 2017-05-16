@@ -39,6 +39,7 @@ void generateConeCoords(
 {
     QPair<QVector3D, QVector3D> vertexPair;
     QPair<QVector3D, QVector3D> normalPair;
+    QVector3D bottomNormal{0.0f, 0.0f, 1.0f};
     float currentAngle = 0.0f;
     QVector3D coneTop{0.0f, 0.0f, height};
     for (short i = 0; i < CIRCLE_POINTS_COUNT; ++i) {
@@ -48,7 +49,7 @@ void generateConeCoords(
 
         normalPair.first = getNormalVector(START_POINT, vertexPair.first, vertexPair.second);
         normalPair.first = getNormalVector(coneTop, vertexPair.first, vertexPair.second);
-        resultArray[i * 3] = Vertex(START_POINT, normalPair.first);
+        resultArray[i * 3] = Vertex(START_POINT, bottomNormal);
         resultArray[(i + CIRCLE_POINTS_COUNT) * 3] = Vertex(coneTop, normalPair.second);
 
         resultArray[i * 3 + 1] = resultArray[(i + CIRCLE_POINTS_COUNT) * 3 + 1] = Vertex(vertexPair.first, normalPair.first);
