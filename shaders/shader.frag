@@ -15,5 +15,5 @@ void main(void)
     vec3 diffuse = max(dot(norm, lightPosition), 0.1f) * lightColor;
     vec3 lightDirection1 = normalize(lightPosition1 - fragPosition);
     vec3 diffuse1 = max(dot(norm, lightPosition1), 0.1f) * lightColor1;
-    color = diffuse * diffuse1 * objectColor;
+    color = (diffuse + diffuse1) * objectColor;
 }
