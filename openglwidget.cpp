@@ -18,8 +18,8 @@ OpenGLWidget::OpenGLWidget(QWidget* parent)
     : QOpenGLWidget(parent)
     , height{2.0f}
     , radius{1.0f}
-    , source1{{-5.0f, -2.0f, 5.0f}, {0.3f, 0.9f, 0.9f}}
-    , source2{{5.0f, 2.0f, -5.0f}, {1.0f, 1.0f, 1.0f}}
+    , source1{{1.0f, 0.0f, -0.0f}, {1.0f, 1.0f, 0.0f}}
+    , source2{{-0.5f, 0.5f, -0.4f}, {0.0f, 1.0f, 1.0f}}
     , model{}
     , view{}
     , projection{}
@@ -71,7 +71,7 @@ void OpenGLWidget::initializeGL()
     initializeOpenGLFunctions();
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glEnable(GL_LIGHTING);
-    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
 
     shaderProgram = new QOpenGLShaderProgram();
     shaderProgram->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/shader.frag");
