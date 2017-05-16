@@ -2,16 +2,19 @@
 
 #include "conecoordsgen.h"
 
-#include <QMouseEvent>
+#include <QImage>
 #include <QOpenGLShaderProgram>
+#include <QOpenGLTexture>
 
 #include <QtMath>
+
+#include <SOIL/SOIL.h>
 
 enum AttributeBuffer
 {
     VERTEX_POSITION,
-    NORMAL_VECTOR
-
+    NORMAL_VECTOR,
+    TEXTURE_COORDS
 };
 
 OpenGLWidget::OpenGLWidget(QWidget* parent)
@@ -23,8 +26,6 @@ OpenGLWidget::OpenGLWidget(QWidget* parent)
     , model{}
     , view{}
     , projection{}
-    , lastMousePosition{-1, -1}
-    , isDefaultMousePosition{true}
 {
     model.setToIdentity();
     view.lookAt({0.0f, 5.0f, 4.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, -1.0f, 0.0f});
@@ -38,6 +39,7 @@ OpenGLWidget::~OpenGLWidget()
     vertexBuffer.release();
     vertexBuffer.destroy();
     delete shaderProgram;
+    delete tex;
 }
 
 void OpenGLWidget::setFirstLightSourcePosition(const QVector3D& position)
@@ -83,10 +85,16 @@ void OpenGLWidget::initializeGL()
     vertexBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
     vertexBuffer.allocate(sizeof(vertices));
 
+    tex = new QOpenGLTexture(QOpenGLTexture::Target2D);
+    QImage image = QImage(":/textures/stripes.xcf");
+    if (!image.isNull()) {
+        tex->setData(image);
+    }
     vertexArrayObject.create();
     vertexArrayObject.bind();
     shaderProgram->enableAttributeArray(VERTEX_POSITION);
     shaderProgram->enableAttributeArray(NORMAL_VECTOR);
+    shaderProgram->enableAttributeArray(TEXTURE_COORDS);
     shaderProgram->setAttributeBuffer(VERTEX_POSITION,
                                       GL_FLOAT,
                                       Vertex::positionOffset(),
@@ -96,6 +104,11 @@ void OpenGLWidget::initializeGL()
                                       GL_FLOAT,
                                       Vertex::normalOffset(),
                                       3,
+                                      Vertex::stride());
+    shaderProgram->setAttributeBuffer(TEXTURE_COORDS,
+                                      GL_FLOAT,
+                                      Vertex::textureCoordsOffset(),
+                                      2,
                                       Vertex::stride());
 
     GLuint shaderProgramId = shaderProgram->programId();
@@ -126,8 +139,10 @@ void OpenGLWidget::resizeGL(int w, int h)
 
 void OpenGLWidget::paintGL()
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     generateConeCoords(vertices, height, radius);
+    tex->bind();
+    shaderProgram->setUniformValue("sampler", 0);
     vertexBuffer.write(0, vertices, sizeof(vertices));
     shaderProgram->setUniformValue("model", model);
     shaderProgram->setUniformValue("view", view);

@@ -28,4 +28,6 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui
 
 RESOURCES += \
-    shaders.qrc
+    resources.qrc
+
+unix|win32: LIBS += -lSOIL

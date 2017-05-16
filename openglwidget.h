@@ -10,6 +10,7 @@
 #include <QOpenGLWidget>
 
 class QOpenGLShaderProgram;
+class QOpenGLTexture;
 
 class OpenGLWidget : public QOpenGLWidget, QOpenGLFunctions
 {
@@ -33,6 +34,7 @@ private:
     QOpenGLShaderProgram* shaderProgram;
     QOpenGLBuffer vertexBuffer;
     QOpenGLVertexArrayObject vertexArrayObject;
+    QOpenGLTexture* tex;
 
     float height;
     float radius;
@@ -44,6 +46,8 @@ private:
     QMatrix4x4 model;
     QMatrix4x4 view;
     QMatrix4x4 projection;
+
+    GLuint texId;
 
     QPoint lastMousePosition;
     bool isDefaultMousePosition;

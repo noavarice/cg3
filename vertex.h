@@ -1,6 +1,7 @@
 #ifndef VERTEX_H
 #define VERTEX_H
 
+#include <QVector2D>
 #include <QVector3D>
 
 class Vertex
@@ -8,7 +9,7 @@ class Vertex
 public:
     Vertex();
     explicit Vertex(const QVector3D &position);
-    Vertex(const QVector3D& position, const QVector3D& normal);
+    Vertex(const QVector3D& position, const QVector3D& normal, const QVector2D& textureCoords);
 
     Q_DECL_CONSTEXPR static size_t positionOffset()
     {
@@ -20,17 +21,20 @@ public:
         return offsetof(Vertex, normal);
     }
 
+    Q_DECL_CONSTEXPR static size_t textureCoordsOffset()
+    {
+        return offsetof(Vertex, texCoords);
+    }
+
     Q_DECL_CONSTEXPR static size_t stride()
     {
         return sizeof(Vertex);
     }
 
-    void setNormal(const QVector3D& newNormal);
-    void setPosition(const QVector3D& newPosition);
-
 private:
     QVector3D position;
     QVector3D normal;
+    QVector2D texCoords;
 };
 
 #endif // VERTEX_H

@@ -42,6 +42,9 @@ void generateConeCoords(
     QVector3D bottomNormal{0.0f, 0.0f, 1.0f};
     float currentAngle = 0.0f;
     QVector3D coneTop{0.0f, 0.0f, height};
+    QVector2D topTexCoords{0.5f, 1.0f};
+    QVector2D leftTexCoords{0.0f, 0.0f};
+    QVector2D rightTexCoords{1.0f, 0.0f};
     for (short i = 0; i < CIRCLE_POINTS_COUNT; ++i) {
         vertexPair.first = getVectorFromAngleAndRadius(currentAngle, radius);
         currentAngle += RADIAN_PART;
@@ -49,10 +52,12 @@ void generateConeCoords(
 
         normalPair.first = getNormalVector(START_POINT, vertexPair.first, vertexPair.second);
         normalPair.first = getNormalVector(coneTop, vertexPair.first, vertexPair.second);
-        resultArray[i * 3] = Vertex(START_POINT, bottomNormal);
-        resultArray[(i + CIRCLE_POINTS_COUNT) * 3] = Vertex(coneTop, normalPair.second);
+        resultArray[i * 3] = Vertex(START_POINT, bottomNormal, topTexCoords);
+        resultArray[(i + CIRCLE_POINTS_COUNT) * 3] = Vertex(coneTop, normalPair.second, topTexCoords);
 
-        resultArray[i * 3 + 1] = resultArray[(i + CIRCLE_POINTS_COUNT) * 3 + 1] = Vertex(vertexPair.first, normalPair.first);
-        resultArray[i * 3 + 2] = resultArray[(i + CIRCLE_POINTS_COUNT) * 3 + 2] = Vertex(vertexPair.second, normalPair.second);
+        resultArray[i * 3 + 1] = resultArray[(i + CIRCLE_POINTS_COUNT) * 3 + 1] =
+                Vertex(vertexPair.first, normalPair.first, rightTexCoords);
+        resultArray[i * 3 + 2] = resultArray[(i + CIRCLE_POINTS_COUNT) * 3 + 2] =
+                Vertex(vertexPair.second, normalPair.second, leftTexCoords);
     }
 }
