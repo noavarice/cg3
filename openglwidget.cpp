@@ -21,8 +21,8 @@ OpenGLWidget::OpenGLWidget(QWidget* parent)
     : QOpenGLWidget(parent)
     , height{2.0f}
     , radius{1.0f}
-    , source1{{1.0f, 0.0f, -0.0f}, {1.0f, 1.0f, 0.0f}}
-    , source2{{-0.5f, 0.5f, -0.4f}, {0.0f, 1.0f, 1.0f}}
+    , source1{{3.0f, 1.0f, 2.0f}, {1.0f, 1.0f, 0.0f}}
+    , source2{{-3.0f, 1.0f, 2.0f}, {0.0f, 1.0f, 1.0f}}
     , model{}
     , view{}
     , projection{}
@@ -112,9 +112,6 @@ void OpenGLWidget::initializeGL()
                                       Vertex::stride());
 
     GLuint shaderProgramId = shaderProgram->programId();
-
-    GLint objectColorLoc = glGetUniformLocation(shaderProgramId, "objectColor");
-    glUniform3f(objectColorLoc, 1.0f, 0.5f, 0.31f);
 
     int lightPosLoc = glGetUniformLocation(shaderProgramId, "lightPosition");
     auto tempVec = source1.first;
