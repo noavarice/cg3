@@ -8,8 +8,6 @@
 
 #include <QtMath>
 
-#include <SOIL/SOIL.h>
-
 enum AttributeBuffer
 {
     VERTEX_POSITION,
@@ -86,10 +84,7 @@ void OpenGLWidget::initializeGL()
     vertexBuffer.allocate(sizeof(vertices));
 
     tex = new QOpenGLTexture(QOpenGLTexture::Target2D);
-    QImage image = QImage(":/textures/stripes.xcf");
-    if (!image.isNull()) {
-        tex->setData(image);
-    }
+    tex->setData(QImage(":/textures/stripes.png"));
     vertexArrayObject.create();
     vertexArrayObject.bind();
     shaderProgram->enableAttributeArray(VERTEX_POSITION);

@@ -4,5 +4,6 @@
         <file>shaders/shader.vert</file>
         <file>textures/stripes.xcf</file>
         <file>textures/squares.xcf</file>
+        <file>textures/stripes.png</file>
     </qresource>
 </RCC>

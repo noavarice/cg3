@@ -29,5 +29,3 @@ FORMS    += mainwindow.ui
 
 RESOURCES += \
     resources.qrc
-
-unix|win32: LIBS += -lSOIL
